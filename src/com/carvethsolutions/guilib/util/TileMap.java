@@ -3,6 +3,7 @@ package com.carvethsolutions.guilib.util;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -14,6 +15,13 @@ public class TileMap implements Iterable<Tile> {
     private Tile[][] data;
 
     private int size;
+
+    /**
+     * Class variables for determining what tiles are considered adjacent
+     */
+    public static final String EIGHT_WAY_DIRECTIONAL = "8";
+
+    public static final String FOUR_WAY_DIRECTIONAL = "4";
 
     /**
      * Returns an iterator over elements of type {@code T}.
@@ -80,5 +88,26 @@ public class TileMap implements Iterable<Tile> {
     public void placeTile(Color color, int x, int y) {
         System.out.println("placeTile(" + x + ", " + y + ")");
         data[y][x] = new Tile(color, x, y);
+    }
+
+    /**
+     * Will return all tiles adjacent to the given tile. By default, any tile directly beside or diagonal to the
+     * tile is considered adjacent. So the maximum output list-size will be 8
+     * @param tile the given tile who's neighbors will be fetched
+     * @return the list of all adjacent tiles.
+     * @throw TileOutOfBoundsException
+     */
+    public ArrayList<Tile> getAdjacentTiles(Tile tile) {
+        return new ArrayList<Tile>();
+    }
+
+    /**
+     *  Will return all tiles adjacent to the given tile.
+     * @param tile the tile contained within the TileMap
+     * @param direction one of the directional global variables EIGHT_WAY_DIRECTIONAL or FOUR_WAY_DIRECTIONAL
+     * @return the list of all adjacent tiles
+     */
+    public ArrayList<Tile> getAdjacentTiles(Tile tile, String direction) {
+        return new ArrayList<Tile>();
     }
 }

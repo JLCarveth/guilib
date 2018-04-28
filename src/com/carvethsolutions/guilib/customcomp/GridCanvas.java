@@ -8,12 +8,14 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * A custom component for displaying a grid
  */
-public class GridCanvas extends JPanel implements MouseListener {
+public class GridCanvas extends JPanel implements MouseListener, MouseMotionListener {
 
     /**
      * Width and height of the canvas, in pixels
@@ -33,6 +35,11 @@ public class GridCanvas extends JPanel implements MouseListener {
     private TileMap tilemap;
 
     private boolean gridLinesVisible = true;
+
+    /**
+     * A list that keeps track of tiles during a mouse drag
+     */
+    private ArrayList<Tile> dragData;
 
     /**
      * Holds color selections
@@ -64,8 +71,9 @@ public class GridCanvas extends JPanel implements MouseListener {
         this.setBackground(Color.WHITE);
 
         this.addMouseListener(this);
+        this.addMouseMotionListener(this);
 
-        paintbrush = new Paintbrush(Color.black);
+        paintbrush = new Paintbrush(Color.blue);
 
         tilemap = new TileMap(width / gridScale);
     }
@@ -88,6 +96,18 @@ public class GridCanvas extends JPanel implements MouseListener {
                 System.out.println(tile);
                 g.setColor(paintbrush.getColor());
                 g.fillRect(tile.getX() * gridScale, tile.getY() * gridScale, gridScale, gridScale);
+            }
+        }
+
+        g.setColor(Color.black);
+        if (gridLinesVisible) {
+            // Vertical Lines
+            for (int x=0; x <= width; x += gridScale) {
+                g.drawLine(x, 0, x, height);
+            }
+
+            for (int y=0; y <= height; y += gridScale) {
+                g.drawLine(0, y, width, y);
             }
         }
     }
@@ -115,7 +135,7 @@ public class GridCanvas extends JPanel implements MouseListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-
+        startDrag();
     }
 
     /**
@@ -125,7 +145,7 @@ public class GridCanvas extends JPanel implements MouseListener {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        stopDrag();
     }
 
     /**
@@ -146,5 +166,40 @@ public class GridCanvas extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        int x = e.getX() / gridScale;
+        int y = e.getY() / gridScale;
+
+        Tile tile = new Tile(x,y);
+
+        System.out.println("(x: " + x + ", y: " + y + ")");
+
+
+        if (!dragData.contains(tile)) {
+            //dragData.add(tile);
+            tilemap.placeTile(paintbrush.getColor(), tile.getX(), tile.getY());
+            repaint();
+        }
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) { }
+
+    private void startDrag() {
+        dragData = new ArrayList<Tile>();
+    }
+
+    private void stopDrag() {
+        for (Tile t : dragData) {
+            tilemap.placeTile(paintbrush.getColor(), t.getX(), t.getY());
+        }
+
+        repaint();
+
+        dragData = null;
     }
 }
