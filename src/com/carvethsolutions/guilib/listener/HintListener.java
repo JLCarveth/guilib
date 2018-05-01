@@ -1,4 +1,4 @@
-package com.carvethsolutions.guilib.listeners;
+package com.carvethsolutions.guilib.listener;
 
 import javax.swing.*;
 import java.awt.event.FocusEvent;
@@ -15,11 +15,6 @@ public class HintListener implements FocusListener {
         this.subject = subject;
     }
 
-    /**
-     * Invoked when a component gains the keyboard focus.
-     *
-     * @param e
-     */
     @Override
     public void focusGained(FocusEvent e) {
         if (subject.getText().equals(hint)) {
@@ -27,14 +22,9 @@ public class HintListener implements FocusListener {
         }
     }
 
-    /**
-     * Invoked when a component loses the keyboard focus.
-     *
-     * @param e
-     */
     @Override
     public void focusLost(FocusEvent e) {
-        if (subject.getText().trim().equals("")) {
+        if (subject.getText().equals("")) {
             subject.setText(hint);
         }
     }
